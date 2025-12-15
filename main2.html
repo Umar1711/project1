@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="uz">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Super Vazifalar Ro'yxati</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(
+					135deg,
+					#667eea 0%,
+					#764ba2 50%,
+					#f093fb 100%
+				);
+				min-height: 100vh;
+				padding: 20px;
+				position: relative;
+				overflow-x: hidden;
+			}
+
+			body::before {
+				content: '';
+				position: fixed;
+				width: 200%;
+				height: 200%;
+				top: -50%;
+				left: -50%;
+				background: radial-gradient(
+						circle at 20% 50%,
+						rgba(255, 255, 255, 0.1) 0%,
+						transparent 50%
+					),
+					radial-gradient(
+						circle at 80% 80%,
+						rgba(255, 255, 255, 0.1) 0%,
+						transparent 50%
+					);
+				animation: rotate 20s linear infinite;
+				z-index: -1;
+			}
+
+			@keyframes rotate {
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			.container {
+				background: rgba(255, 255, 255, 0.95);
+				backdrop-filter: blur(10px);
+				border-radius: 30px;
+				box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+				width: 100%;
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 40px;
+				animation: fadeIn 0.5s ease-out;
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			h1 {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				text-align: center;
+				margin-bottom: 10px;
+				font-size: 2.5em;
+				animation: pulse 2s ease-in-out infinite;
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					transform: scale(1);
+				}
+				50% {
+					transform: scale(1.05);
+				}
+			}
+
+			.subtitle {
+				text-align: center;
+				color: #666;
+				margin-bottom: 30px;
+				font-size: 14px;
+			}
+
+			.theme-toggle {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				background: rgba(255, 255, 255, 0.9);
+				border: none;
+				padding: 12px 20px;
+				border-radius: 20px;
+				cursor: pointer;
+				font-size: 20px;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+				transition: transform 0.3s;
+			}
+
+			.theme-toggle:hover {
+				transform: scale(1.1) rotate(20deg);
+			}
+
+			.input-section {
+				display: flex;
+				gap: 10px;
+				margin-bottom: 20px;
+				flex-wrap: wrap;
+			}
+
+			#taskInput {
+				flex: 1;
+				min-width: 200px;
+				padding: 18px;
+				border: 3px solid transparent;
+				background: linear-gradient(white, white),
+					linear-gradient(135deg, #667eea, #764ba2);
+				background-clip: padding-box, border-box;
+				background-origin: padding-box, border-box;
+				border-radius: 15px;
+				font-size: 16px;
+				outline: none;
+				transition: all 0.3s;
+			}
+
+			#taskInput:focus {
+				transform: translateY(-2px);
+				box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+			}
+
+			.priority-select {
+				padding: 18px;
+				border: 2px solid #e0e0e0;
+				border-radius: 15px;
+				font-size: 16px;
+				cursor: pointer;
+				background: white;
+				outline: none;
+			}
+
+			#addBtn {
+				padding: 18px 40px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border: none;
+				border-radius: 15px;
+				font-size: 16px;
+				cursor: pointer;
+				transition: all 0.3s;
+				font-weight: bold;
+				position: relative;
+				overflow: hidden;
+			}
+
+			#addBtn::before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 0;
+				height: 0;
+				border-radius: 50%;
+				background: rgba(255, 255, 255, 0.3);
+				transform: translate(-50%, -50%);
+				transition: width 0.6s, height 0.6s;
+			}
+
+			#addBtn:hover::before {
+				width: 300px;
+				height: 300px;
+			}
+
+			#addBtn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+			}
+
+			.stats {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+				gap: 15px;
+				margin-bottom: 25px;
+			}
+
+			.stat-item {
+				text-align: center;
+				padding: 20px;
+				background: linear-gradient(135deg, #667eea15, #764ba215);
+				border-radius: 15px;
+				transition: all 0.3s;
+				cursor: pointer;
+			}
+
+			.stat-item:hover {
+				transform: translateY(-5px) scale(1.05);
+				box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+			}
+
+			.stat-number {
+				font-size: 32px;
+				font-weight: bold;
+				background: linear-gradient(135deg, #667eea, #764ba2);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.stat-label {
+				font-size: 13px;
+				color: #666;
+				margin-top: 5px;
+			}
+
+			.filter-buttons {
+				display: flex;
+				gap: 10px;
+				margin-bottom: 20px;
+				flex-wrap: wrap;
+			}
+
+			.filter-btn {
+				flex: 1;
+				min-width: 100px;
+				padding: 12px;
+				border: 2px solid #667eea;
+				background: white;
+				color: #667eea;
+				border-radius: 10px;
+				cursor: pointer;
+				transition: all 0.3s;
+				font-weight: bold;
+			}
+
+			.filter-btn.active {
+				background: linear-gradient(135deg, #667eea, #764ba2);
+				color: white;
+				transform: scale(1.05);
+			}
+
+			.filter-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+			}
+
+			.search-box {
+				width: 100%;
+				padding: 15px;
+				border: 2px solid #e0e0e0;
+				border-radius: 15px;
+				font-size: 16px;
+				margin-bottom: 20px;
+				outline: none;
+				transition: all 0.3s;
+			}
+
+			.search-box:focus {
+				border-color: #667eea;
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+			}
+
+			#taskList {
+				list-style: none;
+				max-height: 500px;
+				overflow-y: auto;
+				padding-right: 10px;
+			}
+
+			#taskList::-webkit-scrollbar {
+				width: 8px;
+			}
+
+			#taskList::-webkit-scrollbar-track {
+				background: #f1f1f1;
+				border-radius: 10px;
+			}
+
+			#taskList::-webkit-scrollbar-thumb {
+				background: linear-gradient(135deg, #667eea, #764ba2);
+				border-radius: 10px;
+			}
+
+			.task-item {
+				background: linear-gradient(135deg, #f8f9fa, #ffffff);
+				padding: 20px;
+				margin-bottom: 15px;
+				border-radius: 15px;
+				display: flex;
+				align-items: center;
+				gap: 15px;
+				transition: all 0.3s;
+				animation: slideIn 0.4s ease-out;
+				border-left: 5px solid;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.task-item::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					rgba(255, 255, 255, 0.5),
+					transparent
+				);
+				transition: left 0.5s;
+			}
+
+			.task-item:hover::before {
+				left: 100%;
+			}
+
+			@keyframes slideIn {
+				from {
+					opacity: 0;
+					transform: translateX(-30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+
+			.task-item:hover {
+				transform: translateX(10px) scale(1.02);
+				box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+			}
+
+			.task-item.priority-high {
+				border-left-color: #ff4757;
+				background: linear-gradient(135deg, #fff5f5, #ffffff);
+			}
+
+			.task-item.priority-medium {
+				border-left-color: #ffa502;
+				background: linear-gradient(135deg, #fffbf5, #ffffff);
+			}
+
+			.task-item.priority-low {
+				border-left-color: #2ed573;
+				background: linear-gradient(135deg, #f5fff8, #ffffff);
+			}
+
+			.task-item.completed {
+				opacity: 0.7;
+				background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+			}
+
+			.task-item.completed .task-text {
+				text-decoration: line-through;
+				color: #999;
+			}
+
+			input[type='checkbox'] {
+				width: 24px;
+				height: 24px;
+				cursor: pointer;
+				accent-color: #667eea;
+				transform: scale(1.2);
+			}
+
+			.task-content {
+				flex: 1;
+			}
+
+			.task-text {
+				font-size: 17px;
+				color: #333;
+				margin-bottom: 5px;
+				font-weight: 500;
+			}
+
+			.task-meta {
+				display: flex;
+				gap: 15px;
+				font-size: 12px;
+				color: #999;
+			}
+
+			.priority-badge {
+				padding: 4px 12px;
+				border-radius: 12px;
+				font-weight: bold;
+				font-size: 11px;
+			}
+
+			.priority-high-badge {
+				background: #ff4757;
+				color: white;
+			}
+
+			.priority-medium-badge {
+				background: #ffa502;
+				color: white;
+			}
+
+			.priority-low-badge {
+				background: #2ed573;
+				color: white;
+			}
+
+			.task-actions {
+				display: flex;
+				gap: 8px;
+			}
+
+			.edit-btn,
+			.delete-btn {
+				padding: 10px 18px;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				font-size: 14px;
+				transition: all 0.3s;
+				font-weight: bold;
+			}
+
+			.edit-btn {
+				background: #667eea;
+				color: white;
+			}
+
+			.edit-btn:hover {
+				background: #5568d3;
+				transform: scale(1.1) rotate(5deg);
+			}
+
+			.delete-btn {
+				background: #ff4757;
+				color: white;
+			}
+
+			.delete-btn:hover {
+				background: #ff3838;
+				transform: scale(1.1) rotate(-5deg);
+			}
+
+			.empty-state {
+				text-align: center;
+				padding: 60px;
+				color: #999;
+			}
+
+			.empty-state-icon {
+				font-size: 80px;
+				margin-bottom: 15px;
+				animation: bounce 2s infinite;
+			}
+
+			@keyframes bounce {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-20px);
+				}
+			}
+
+			.bottom-actions {
+				display: flex;
+				gap: 10px;
+				margin-top: 20px;
+			}
+
+			.clear-all-btn,
+			.export-btn {
+				flex: 1;
+				padding: 15px;
+				border: none;
+				border-radius: 15px;
+				font-size: 14px;
+				cursor: pointer;
+				transition: all 0.3s;
+				font-weight: bold;
+			}
+
+			.clear-all-btn {
+				background: linear-gradient(135deg, #ff4757, #ff6348);
+				color: white;
+			}
+
+			.clear-all-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+			}
+
+			.export-btn {
+				background: linear-gradient(135deg, #2ed573, #7bed9f);
+				color: white;
+			}
+
+			.export-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 10px 25px rgba(46, 213, 115, 0.4);
+			}
+
+			.progress-bar {
+				width: 100%;
+				height: 8px;
+				background: #e0e0e0;
+				border-radius: 10px;
+				margin-bottom: 20px;
+				overflow: hidden;
+			}
+
+			.progress-fill {
+				height: 100%;
+				background: linear-gradient(90deg, #667eea, #764ba2);
+				border-radius: 10px;
+				transition: width 0.5s ease;
+			}
+
+			body.dark-mode {
+				background: linear-gradient(
+					135deg,
+					#1a1a2e 0%,
+					#16213e 50%,
+					#0f3460 100%
+				);
+			}
+
+			body.dark-mode .container {
+				background: rgba(30, 30, 30, 0.95);
+				color: white;
+			}
+
+			body.dark-mode .task-item {
+				background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+				color: white;
+			}
+
+			body.dark-mode .task-text {
+				color: white;
+			}
+
+			body.dark-mode #taskInput,
+			body.dark-mode .priority-select,
+			body.dark-mode .search-box {
+				background: #2a2a2a;
+				color: white;
+				border-color: #444;
+			}
+
+			body.dark-mode .filter-btn {
+				background: #2a2a2a;
+				color: #667eea;
+				border-color: #667eea;
+			}
+
+			body.dark-mode .subtitle,
+			body.dark-mode .stat-label,
+			body.dark-mode .task-meta {
+				color: #aaa;
+			}
+		</style>
+	</head>
+	<body>
+		<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+		<div class="container">
+			<h1>🌟 Super Vazifalar Ro'yxati 🌟</h1>
+			<p class="subtitle">
+				Vazifalaringizni boshqaring va muvaffaqiyatga erishing!
+			</p>
+
+			<div class="progress-bar">
+				<div class="progress-fill" id="progressFill"></div>
+			</div>
+
+			<div class="input-section">
+				<input
+					type="text"
+					id="taskInput"
+					placeholder="Yangi vazifa kiriting..."
+				/>
+				<select class="priority-select" id="prioritySelect">
+					<option value="low">🟢 Kam muhim</option>
+					<option value="medium" selected>🟡 O'rta</option>
+					<option value="high">🔴 Juda muhim</option>
+				</select>
+				<button id="addBtn">➕ Qo'shish</button>
+			</div>
+
+			<input
+				type="text"
+				class="search-box"
+				id="searchBox"
+				placeholder="🔍 Vazifalarni qidirish..."
+			/>
+
+			<div class="stats">
+				<div class="stat-item">
+					<div class="stat-number" id="totalTasks">0</div>
+					<div class="stat-label">📊 Jami</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number" id="activeTasks">0</div>
+					<div class="stat-label">⚡ Faol</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number" id="completedTasks">0</div>
+					<div class="stat-label">✅ Bajarilgan</div>
+				</div>
+				<div class="stat-item">
+					<div class="stat-number" id="progressPercent">0%</div>
+					<div class="stat-label">📈 Progress</div>
+				</div>
+			</div>
+
+			<div class="filter-buttons">
+				<button class="filter-btn active" onclick="filterTasks('all')">
+					Barchasi
+				</button>
+				<button class="filter-btn" onclick="filterTasks('active')">Faol</button>
+				<button class="filter-btn" onclick="filterTasks('completed')">
+					Bajarilgan
+				</button>
+				<button class="filter-btn" onclick="filterTasks('high')">
+					🔴 Muhim
+				</button>
+			</div>
+
+			<ul id="taskList"></ul>
+
+			<div class="bottom-actions" id="bottomActions" style="display: none">
+				<button class="clear-all-btn" onclick="clearAll()">
+					🗑️ Barchasini O'chirish
+				</button>
+				<button class="export-btn" onclick="exportTasks()">
+					📥 Yuklab olish
+				</button>
+			</div>
+		</div>
+
+		<script>
+			let tasks = []
+			let currentFilter = 'all'
+			let editingIndex = -1
+
+			const taskInput = document.getElementById('taskInput')
+			const prioritySelect = document.getElementById('prioritySelect')
+			const addBtn = document.getElementById('addBtn')
+			const taskList = document.getElementById('taskList')
+			const searchBox = document.getElementById('searchBox')
+			const bottomActions = document.getElementById('bottomActions')
+
+			function loadTasks() {
+				const saved = localStorage.getItem('tasks')
+				if (saved) {
+					tasks = JSON.parse(saved)
+					renderTasks()
+				}
+			}
+
+			function saveTasks() {
+				localStorage.setItem('tasks', JSON.stringify(tasks))
+			}
+
+			function updateStats() {
+				const total = tasks.length
+				const completed = tasks.filter(t => t.completed).length
+				const active = total - completed
+				const progress = total > 0 ? Math.round((completed / total) * 100) : 0
+
+				document.getElementById('totalTasks').textContent = total
+				document.getElementById('activeTasks').textContent = active
+				document.getElementById('completedTasks').textContent = completed
+				document.getElementById('progressPercent').textContent = progress + '%'
+				document.getElementById('progressFill').style.width = progress + '%'
+
+				bottomActions.style.display = total > 0 ? 'flex' : 'none'
+			}
+
+			function renderTasks() {
+				const searchTerm = searchBox.value.toLowerCase()
+				let filteredTasks = tasks.filter(task => {
+					const matchesSearch = task.text.toLowerCase().includes(searchTerm)
+					const matchesFilter =
+						currentFilter === 'all' ||
+						(currentFilter === 'active' && !task.completed) ||
+						(currentFilter === 'completed' && task.completed) ||
+						(currentFilter === 'high' && task.priority === 'high')
+					return matchesSearch && matchesFilter
+				})
+
+				if (filteredTasks.length === 0) {
+					taskList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>${
+													tasks.length === 0
+														? "Hozircha vazifalar yo'q. Yangi vazifa qo'shing!"
+														: 'Ushbu filtrda vazifalar topilmadi'
+												}</p>
+                    </div>
+                `
+					updateStats()
+					return
+				}
+
+				taskList.innerHTML = filteredTasks
+					.map((task, originalIndex) => {
+						const taskIndex = tasks.indexOf(task)
+						const priorityBadgeClass = `priority-${task.priority}-badge`
+						const priorityText = {
+							high: '🔴 Muhim',
+							medium: "🟡 O'rta",
+							low: '🟢 Kam',
+						}
+
+						return `
+                    <li class="task-item priority-${task.priority} ${
+							task.completed ? 'completed' : ''
+						}">
+                        <input type="checkbox" ${
+													task.completed ? 'checked' : ''
+												} onchange="toggleTask(${taskIndex})" />
+                        <div class="task-content">
+                            <div class="task-text">${task.text}</div>
+                            <div class="task-meta">
+                                <span class="priority-badge ${priorityBadgeClass}">${
+							priorityText[task.priority]
+						}</span>
+                                <span>📅 ${task.date}</span>
+                                <span>🕐 ${task.time}</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="edit-btn" onclick="editTask(${taskIndex})">✏️</button>
+                            <button class="delete-btn" onclick="deleteTask(${taskIndex})">🗑️</button>
+                        </div>
+                    </li>
+                `
+					})
+					.join('')
+
+				updateStats()
+			}
+
+			function addTask() {
+				const text = taskInput.value.trim()
+				if (text === '') {
+					alert('⚠️ Iltimos, vazifa kiriting!')
+					return
+				}
+
+				const now = new Date()
+				const task = {
+					text,
+					priority: prioritySelect.value,
+					completed: false,
+					date: now.toLocaleDateString('uz-UZ'),
+					time: now.toLocaleTimeString('uz-UZ', {
+						hour: '2-digit',
+						minute: '2-digit',
+					}),
+					id: Date.now(),
+				}
+
+				if (editingIndex !== -1) {
+					tasks[editingIndex] = {
+						...tasks[editingIndex],
+						text,
+						priority: prioritySelect.value,
+					}
+					editingIndex = -1
+					addBtn.textContent = "➕ Qo'shish"
+				} else {
+					tasks.unshift(task)
+				}
+
+				taskInput.value = ''
+				prioritySelect.value = 'medium'
+				saveTasks()
+				renderTasks()
+			}
+
+			function toggleTask(index) {
+				tasks[index].completed = !tasks[index].completed
+				saveTasks()
+				renderTasks()
+			}
+
+			function editTask(index) {
+				editingIndex = index
+				taskInput.value = tasks[index].text
+				prioritySelect.value = tasks[index].priority
+				addBtn.textContent = '💾 Saqlash'
+				taskInput.focus()
+			}
+
+			function deleteTask(index) {
+				if (confirm("❓ Bu vazifani o'chirmoqchimisiz?")) {
+					tasks.splice(index, 1)
+					saveTasks()
+					renderTasks()
+				}
+			}
+
+			function clearAll() {
+				if (confirm("⚠️ Barcha vazifalarni o'chirmoqchimisiz?")) {
+					tasks = []
+					saveTasks()
+					renderTasks()
+				}
+			}
+
+			function filterTasks(filter) {
+				currentFilter = filter
+				document
+					.querySelectorAll('.filter-btn')
+					.forEach(btn => btn.classList.remove('active'))
+				event.target.classList.add('active')
+				renderTasks()
+			}
+
+			function exportTasks() {
+				const dataStr = JSON.stringify(tasks, null, 2)
+				const dataBlob = new Blob([dataStr], { type: 'application/json' })
+				const url = URL.createObjectURL(dataBlob)
+				const link = document.createElement('a')
+				link.href = url
+				link.download = `vazifalar-${new Date().toLocaleDateString()}.json`
+				link.click()
+				URL.revokeObjectURL(url)
+				alert('✅ Vazifalar yuklab olindi!')
+			}
+
+			function toggleTheme() {
+				document.body.classList.toggle('dark-mode')
+				const themeBtn = document.querySelector('.theme-toggle')
+				themeBtn.textContent = document.body.classList.contains('dark-mode')
+					? '☀️'
+					: '🌙'
+				localStorage.setItem(
+					'theme',
+					document.body.classList.contains('dark-mode') ? 'dark' : 'light'
+				)
+			}
+
+			addBtn.addEventListener('click', addTask)
+			taskInput.addEventListener('keypress', e => {
+				if (e.key === 'Enter') addTask()
+			})
+			searchBox.addEventListener('input', renderTasks)
+
+			loadTasks()
+
+			const savedTheme = localStorage.getItem('theme')
+			if (savedTheme === 'dark') {
+				toggleTheme()
+			}
+		</script>
+	</body>
+</html>
